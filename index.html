@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarzPay — Bills, Airtime & Data</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+body { background:#0a0e1a; color:#fff; }
+.header { background:linear-gradient(135deg,#6366f1,#4f46e5); padding:20px; text-align:center; position:sticky; top:0; z-index:100; }
+.header h1 { font-size:24px; }
+.header p { font-size:13px; opacity:0.8; margin-top:4px; }
+.container { max-width:600px; margin:0 auto; padding:16px; }
+.card { background:#1a1f2e; border-radius:16px; padding:20px; margin-bottom:16px; border:1px solid #2a2f3e; }
+.card h2 { font-size:18px; margin-bottom:12px; color:#818cf8; }
+.cat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+.cat-item { background:#0a0e1a; border-radius:12px; padding:16px 8px; text-align:center; cursor:pointer; border:2px solid #2a2f3e; }
+.cat-item.active { border-color:#6366f1; background:#312e81; }
+.cat-item .icon { font-size:28px; }
+.cat-item .name { font-size:11px; margin-top:4px; color:#cbd5e1; }
+.provider-btn { display:block; width:100%; padding:14px; background:#0a0e1a; border:1px solid #2a2f3e; border-radius:10px; color:#fff; font-size:14px; margin-bottom:8px; cursor:pointer; text-align:left; }
+.provider-btn:hover { border-color:#6366f1; }
+.provider-btn.selected { border-color:#6366f1; background:#312e81; }
+.input { width:100%; padding:12px; background:#0a0e1a; border:1px solid #2a2f3e; border-radius:10px; color:#fff; font-size:14px; margin-bottom:10px; }
+.input:focus { border-color:#6366f1; outline:none; }
+.label { font-size:13px; color:#8892a6; margin-bottom:4px; }
+.btn { width:100%; padding:14px; background:linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; border:none; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:12px; }
+.btn:active { transform:scale(0.98); }
+.plan-btn { padding:10px; background:#0a0e1a; border:1px solid #2a2f3e; border-radius:8px; color:#fff; font-size:13px; cursor:pointer; margin-bottom:6px; width:100%; text-align:left; }
+.plan-btn:hover { border-color:#6366f1; }
+.plan-btn.selected { border-color:#6366f1; background:#312e81; }
+.discount { background:#1a8a5e; padding:2px 8px; border-radius:8px; font-size:10px; font-weight:bold; margin-left:6px; }
+</style>
+</head>
+<body>
+<div class="header">
+<h1>⚡ HarzPay</h1>
+<p>Bills, Airtime, Data, Cable TV — All in One</p>
+</div>
+<div class="container">
+<div class="card">
+<h2>What do you want to pay?</h2>
+<div class="cat-grid" id="categories"></div>
+</div>
+<div id="provider-section" style="display:none">
+<div class="card">
+<h2 id="provider-title">Select Provider</h2>
+<div id="providers"></div>
+</div>
+</div>
+<div id="form-section" style="display:none">
+<div class="card">
+<h2 id="form-title">Payment Details</h2>
+<div id="plans-section" style="display:none">
+<div class="label">Select Plan</div>
+<div id="plans"></div>
+</div>
+<div id="amount-section">
+<div class="label">Amount (₦)</div>
+<input class="input" id="amount" type="number" placeholder="1000">
+</div>
+<div id="meter-section" style="display:none">
+<div class="label">Meter Number / Smartcard Number</div>
+<input class="input" id="meter" placeholder="Enter meter number">
+</div>
+<div class="label">Phone Number</div>
+<input class="input" id="phone" placeholder="08012345678">
+<div class="label">Your Name</div>
+<input class="input" id="name" placeholder="Your name">
+<div class="label">Email (for receipt)</div>
+<input class="input" id="email" placeholder="you@email.com">
+<div id="discount-info" style="display:none; margin-top:8px; padding:8px; background:#1a8a5e; border-radius:8px; font-size:13px;"></div>
+<button class="btn" onclick="payBill()">Pay Now</button>
+</div>
+</div>
+<div id="result-section" style="display:none">
+<div class="card" style="text-align:center">
+<div style="font-size:48px; margin-bottom:12px">✅</div>
+<h2>Payment Successful!</h2>
+<div id="result-details" style="margin-top:12px; font-size:14px; color:#cbd5e1;"></div>
+</div>
+</div>
+</div>
+<script>
+const API='https://superagent-2286fb2f.base44.app/functions/harzPay';
+const CATS=[{id:'airtime',icon:'📱',name:'Airtime'},{id:'data',icon:'📶',name:'Data'},{id:'electricity',icon:'⚡',name:'Electricity'},{id:'cable_tv',icon:'📺',name:'Cable TV'},{id:'internet',icon:'🌐',name:'Internet'},{id:'water',icon:'💧',name:'Water'}];
+let selectedCat='',selectedProvider=null,providers=[];
+function init(){
+document.getElementById('categories').innerHTML=CATS.map(c=>`<div class="cat-item" onclick="selectCat('${c.id}')"><div class="icon">${c.icon}</div><div class="name">${c.name}</div></div>`).join('')
+}
+async function selectCat(cat){
+selectedCat=cat;selectedProvider=null;
+document.querySelectorAll('.cat-item').forEach(e=>e.classList.remove('active'));
+event.currentTarget.classList.add('active');
+document.getElementById('provider-section').style.display='block';
+document.getElementById('form-section').style.display='none';
+document.getElementById('result-section').style.display='none';
+document.getElementById('provider-title').textContent='Select '+CATS.find(c=>c.id==cat).name+' Provider';
+try{
+const r=await fetch(API+'?action=providers&bill_type='+cat);
+const d=await r.json();
+providers=d.providers||[];
+document.getElementById('providers').innerHTML=providers.map(p=>`<button class="provider-btn" onclick="selectProvider('${p.id}')">${p.provider_name}${p.discount_percent>0?`<span class="discount">-${p.discount_percent}%</span>`:''}</button>`).join('')
+}catch(e){document.getElementById('providers').innerHTML='<p style="color:#8892a6">No providers found.</p>'}
+}
+function selectProvider(pid){
+selectedProvider=providers.find(p=>p.id==pid);
+document.querySelectorAll('.provider-btn').forEach(e=>e.classList.remove('selected'));
+event.currentTarget.classList.add('selected');
+document.getElementById('form-section').style.display='block';
+document.getElementById('form-title').textContent=selectedProvider.provider_name;
+const hasPlans=selectedProvider.plans&&selectedProvider.plans.length>0;
+document.getElementById('plans-section').style.display=hasPlans?'block':'none';
+document.getElementById('amount-section').style.display=hasPlans?'none':'block';
+document.getElementById('meter-section').style.display=(selectedCat=='electricity'||selectedCat=='cable_tv')?'block':'none';
+if(hasPlans){
+document.getElementById('plans').innerHTML=selectedProvider.plans.map((p,i)=>`<button class="plan-btn" onclick="selectPlan(${i})">${p}</button>`).join('')
+}
+if(selectedProvider.discount_percent>0){
+document.getElementById('discount-info').style.display='block';
+document.getElementById('discount-info').textContent='🎉 You save '+selectedProvider.discount_percent+'% on this provider!';
+}else{
+document.getElementById('discount-info').style.display='none';
+}
+}
+let selectedPlan=null;
+function selectPlan(i){
+selectedPlan=selectedProvider.plans[i];
+document.querySelectorAll('.plan-btn').forEach(e=>e.classList.remove('selected'));
+event.currentTarget.classList.add('selected');
+}
+async function payBill(){
+const amount=selectedPlan?Number(selectedPlan.split(':')[0]):Number(document.getElementById('amount').value);
+if(!amount){alert('Please enter amount');return}
+const phone=document.getElementById('phone').value;
+if(!phone){alert('Enter phone number');return}
+const body={action:'pay',bill_type:selectedCat,provider_id:selectedProvider.id,amount:amount,phone:phone,name:document.getElementById('name').value,email:document.getElementById('email').value,meter:document.getElementById('meter').value};
+try{
+const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+const d=await r.json();
+if(d.status==='completed'||d.id){
+document.getElementById('form-section').style.display='none';
+document.getElementById('provider-section').style.display='none';
+document.getElementById('result-section').style.display='block';
+document.getElementById('result-details').innerHTML=`Amount: ₦${amount.toLocaleString()}<br>Provider: ${selectedProvider.provider_name}<br>Phone: ${phone}<br>Status: <b>Successful</b>${d.token?'<br>Token: '+d.token:''}`;
+}else{
+alert('Payment failed: '+(d.error||'Unknown error'))
+}
+}catch(e){alert('Error: '+e.message)}
+}
+init()
+</script>
+</body>
+</html>
