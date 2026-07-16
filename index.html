@@ -83,30 +83,30 @@ body { background:#0a0e1a; color:#fff; }
 </div>
 <script>
 const API='https://superagent-2286fb2f.base44.app/functions/harzPay';
+function post(data){return fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json())}
 const CATS=[{id:'airtime',icon:'📱',name:'Airtime'},{id:'data',icon:'📶',name:'Data'},{id:'electricity',icon:'⚡',name:'Electricity'},{id:'cable_tv',icon:'📺',name:'Cable TV'},{id:'internet',icon:'🌐',name:'Internet'},{id:'water',icon:'💧',name:'Water'}];
 let selectedCat='',selectedProvider=null,providers=[];
 function init(){
-document.getElementById('categories').innerHTML=CATS.map(c=>`<div class="cat-item" onclick="selectCat('${c.id}')"><div class="icon">${c.icon}</div><div class="name">${c.name}</div></div>`).join('')
+document.getElementById('categories').innerHTML=CATS.map(c=>`<div class="cat-item" onclick="selectCat('${c.id}',this)"><div class="icon">${c.icon}</div><div class="name">${c.name}</div></div>`).join('')
 }
-async function selectCat(cat){
+async function selectCat(cat,el){
 selectedCat=cat;selectedProvider=null;
 document.querySelectorAll('.cat-item').forEach(e=>e.classList.remove('active'));
-event.currentTarget.classList.add('active');
+el.classList.add('active');
 document.getElementById('provider-section').style.display='block';
 document.getElementById('form-section').style.display='none';
 document.getElementById('result-section').style.display='none';
 document.getElementById('provider-title').textContent='Select '+CATS.find(c=>c.id==cat).name+' Provider';
 try{
-const r=await fetch(API+'?action=providers&bill_type='+cat);
-const d=await r.json();
+const d=await post({action:'providers',bill_type:cat});
 providers=d.providers||[];
-document.getElementById('providers').innerHTML=providers.map(p=>`<button class="provider-btn" onclick="selectProvider('${p.id}')">${p.provider_name}${p.discount_percent>0?`<span class="discount">-${p.discount_percent}%</span>`:''}</button>`).join('')
+document.getElementById('providers').innerHTML=providers.map((p,i)=>`<button class="provider-btn" onclick="selectProvider('${p.id}',this)">${p.provider_name}${p.discount_percent>0?`<span class="discount">-${p.discount_percent}%</span>`:''}</button>`).join('')
 }catch(e){document.getElementById('providers').innerHTML='<p style="color:#8892a6">No providers found.</p>'}
 }
-function selectProvider(pid){
+function selectProvider(pid,el){
 selectedProvider=providers.find(p=>p.id==pid);
 document.querySelectorAll('.provider-btn').forEach(e=>e.classList.remove('selected'));
-event.currentTarget.classList.add('selected');
+el.classList.add('selected');
 document.getElementById('form-section').style.display='block';
 document.getElementById('form-title').textContent=selectedProvider.provider_name;
 const hasPlans=selectedProvider.plans&&selectedProvider.plans.length>0;
@@ -114,38 +114,32 @@ document.getElementById('plans-section').style.display=hasPlans?'block':'none';
 document.getElementById('amount-section').style.display=hasPlans?'none':'block';
 document.getElementById('meter-section').style.display=(selectedCat=='electricity'||selectedCat=='cable_tv')?'block':'none';
 if(hasPlans){
-document.getElementById('plans').innerHTML=selectedProvider.plans.map((p,i)=>`<button class="plan-btn" onclick="selectPlan(${i})">${p}</button>`).join('')
+document.getElementById('plans').innerHTML=selectedProvider.plans.map((p,i)=>`<button class="plan-btn" onclick="selectPlan(${i},this)">${p}</button>`).join('')
 }
 if(selectedProvider.discount_percent>0){
 document.getElementById('discount-info').style.display='block';
 document.getElementById('discount-info').textContent='🎉 You save '+selectedProvider.discount_percent+'% on this provider!';
-}else{
-document.getElementById('discount-info').style.display='none';
-}
+}else{document.getElementById('discount-info').style.display='none'}
 }
 let selectedPlan=null;
-function selectPlan(i){
+function selectPlan(i,el){
 selectedPlan=selectedProvider.plans[i];
 document.querySelectorAll('.plan-btn').forEach(e=>e.classList.remove('selected'));
-event.currentTarget.classList.add('selected');
+el.classList.add('selected');
 }
 async function payBill(){
 const amount=selectedPlan?Number(selectedPlan.split(':')[0]):Number(document.getElementById('amount').value);
 if(!amount){alert('Please enter amount');return}
 const phone=document.getElementById('phone').value;
 if(!phone){alert('Enter phone number');return}
-const body={action:'pay',bill_type:selectedCat,provider_id:selectedProvider.id,amount:amount,phone:phone,name:document.getElementById('name').value,email:document.getElementById('email').value,meter:document.getElementById('meter').value};
 try{
-const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-const d=await r.json();
+const d=await post({action:'pay',bill_type:selectedCat,provider_id:selectedProvider.id,amount:amount,phone:phone,name:document.getElementById('name').value,email:document.getElementById('email').value,meter:document.getElementById('meter').value});
 if(d.status==='completed'||d.id){
 document.getElementById('form-section').style.display='none';
 document.getElementById('provider-section').style.display='none';
 document.getElementById('result-section').style.display='block';
 document.getElementById('result-details').innerHTML=`Amount: ₦${amount.toLocaleString()}<br>Provider: ${selectedProvider.provider_name}<br>Phone: ${phone}<br>Status: <b>Successful</b>${d.token?'<br>Token: '+d.token:''}`;
-}else{
-alert('Payment failed: '+(d.error||'Unknown error'))
-}
+}else{alert('Payment failed: '+(d.error||'Unknown error'))}
 }catch(e){alert('Error: '+e.message)}
 }
 init()
