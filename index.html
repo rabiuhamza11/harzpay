@@ -3,420 +3,298 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HarzPay — Bills, Airtime & Payments</title>
+<title>HARZ Cloud — The Vercel of Africa</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-body{background:#0a0e1a;color:#fff}
-.header{background:linear-gradient(135deg,#6366f1,#4f46e5);padding:20px;text-align:center;position:sticky;top:0;z-index:100}
-.header h1{font-size:24px}
-.header p{font-size:13px;opacity:0.8;margin-top:4px}
-.container{max-width:600px;margin:0 auto;padding:16px}
-.card{background:#1a1f2e;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid #2a2f3e}
-.card h2{font-size:18px;margin-bottom:12px;color:#818cf8}
-.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.cat-item{background:#0a0e1a;border-radius:12px;padding:16px 8px;text-align:center;cursor:pointer;border:2px solid #2a2f3e;transition:all .2s}
-.cat-item.active{border-color:#6366f1;background:#312e81}
-.cat-item .icon{font-size:28px}
-.cat-item .name{font-size:11px;margin-top:4px;color:#cbd5e1}
-.provider-btn{display:block;width:100%;padding:14px;background:#0a0e1a;border:1px solid #2a2f3e;border-radius:10px;color:#fff;font-size:14px;margin-bottom:8px;cursor:pointer;text-align:left;transition:all .2s}
-.provider-btn:hover{border-color:#6366f1}
-.provider-btn.selected{border-color:#6366f1;background:#312e81}
-.input{width:100%;padding:12px;background:#0a0e1a;border:1px solid #2a2f3e;border-radius:10px;color:#fff;font-size:14px;margin-bottom:10px}
-.input:focus{border-color:#6366f1;outline:none}
-.label{font-size:13px;color:#8892a6;margin-bottom:4px}
-.btn{width:100%;padding:14px;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:12px;transition:all .2s}
-.btn:active{transform:scale(0.98)}
-.btn-green{background:linear-gradient(135deg,#00A859,#008F4D)}
-.btn-orange{background:linear-gradient(135deg,#FF6B35,#e55a25)}
-.plan-btn{padding:10px;background:#0a0e1a;border:1px solid #2a2f3e;border-radius:8px;color:#fff;font-size:13px;cursor:pointer;margin-bottom:6px;width:100%;text-align:left;transition:all .2s}
-.plan-btn:hover{border-color:#6366f1}
-.plan-btn.selected{border-color:#6366f1;background:#312e81}
-.discount{background:#1a8a5e;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:bold;margin-left:6px}
-.tab-bar{display:flex;gap:8px;margin-bottom:16px}
-.tab{flex:1;padding:12px;background:#1a1f2e;border:2px solid #2a2f3e;border-radius:12px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
-.tab.active{border-color:#6366f1;background:#312e81;color:#818cf8}
-.pay-option{display:flex;align-items:center;gap:12px;padding:14px;background:#0a0e1a;border:1px solid #2a2f3e;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .2s}
-.pay-option:hover{border-color:#6366f1}
-.pay-option.selected{border-color:#6366f1;background:#312e81}
-.pay-option .icon{font-size:24px}
-.pay-option .info{flex:1}
-.pay-option .name{font-size:14px;font-weight:600}
-.pay-option .detail{font-size:12px;color:#8892a6;margin-top:2px}
-.result-box{background:#0a0e1a;border-radius:12px;padding:16px;margin-top:12px;font-size:13px;color:#cbd5e1;line-height:1.6}
-.result-box .ref{color:#818cf8;font-weight:bold}
-.success-icon{font-size:48px;text-align:center;margin-bottom:12px}
-.pending-icon{font-size:48px;text-align:center;margin-bottom:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* Nav */
+nav{position:fixed;top:0;width:100%;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);z-index:100;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
+nav .container{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:22px;font-weight:800;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:#999;font-size:14px;transition:.3s}
+.nav-links a:hover{color:#fff}
+.btn{padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.3s;border:none}
+.btn-primary{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,102,241,0.4)}
+.btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.15)}
+.btn-ghost:hover{border-color:#6366f1}
+
+/* Hero */
+.hero{padding:140px 0 80px;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);pointer-events:none}
+.badge{display:inline-block;padding:6px 16px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:20px;font-size:13px;color:#818cf8;margin-bottom:24px}
+.hero h1{font-size:64px;font-weight:800;line-height:1.05;margin-bottom:24px;letter-spacing:-2px}
+.hero h1 span{background:linear-gradient(135deg,#6366f1,#ec4899,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:20px;color:#888;max-width:600px;margin:0 auto 40px;line-height:1.6}
+.hero-cta{display:flex;gap:16px;justify-content:center;margin-bottom:60px}
+.hero-cta .btn{padding:14px 32px;font-size:16px}
+.stats{display:flex;justify-content:center;gap:60px;padding:40px 0;border-top:1px solid rgba(255,255,255,0.06)}
+.stat{text-align:center}
+.stat h3{font-size:36px;font-weight:800;color:#fff}
+.stat p{font-size:14px;color:#666;margin-top:4px}
+
+/* Features */
+.features{padding:80px 0}
+.section-title{text-align:center;margin-bottom:60px}
+.section-title h2{font-size:42px;font-weight:800;margin-bottom:16px}
+.section-title p{color:#888;font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:32px;transition:.3s}
+.card:hover{border-color:rgba(99,102,241,0.3);transform:translateY(-4px)}
+.card .icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px}
+.card h3{font-size:20px;font-weight:700;margin-bottom:10px}
+.card p{color:#888;font-size:15px;line-height:1.6}
+
+/* Pricing */
+.pricing{padding:80px 0;background:rgba(255,255,255,0.02)}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:40px}
+.price-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:32px;text-align:center;transition:.3s;position:relative}
+.price-card:hover{border-color:rgba(99,102,241,0.3);transform:scale(1.03)}
+.price-card.popular{border-color:#6366f1;background:rgba(99,102,241,0.05)}
+.price-card.popular::after{content:'POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#6366f1;padding:4px 16px;border-radius:20px;font-size:11px;font-weight:700}
+.price-card h3{font-size:16px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.price{font-size:42px;font-weight:800;margin-bottom:4px}
+.price span{font-size:14px;color:#666;font-weight:400}
+.price-card p{color:#666;font-size:13px;margin-bottom:24px}
+.price-card ul{list-style:none;text-align:left;margin-bottom:24px}
+.price-card li{padding:6px 0;color:#999;font-size:14px;padding-left:24px;position:relative}
+.price-card li::before{content:'✓';position:absolute;left:0;color:#6366f1;font-weight:700}
+.price-card .btn{width:100%}
+
+/* Code section */
+.code-section{padding:80px 0}
+.code-block{background:#111;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:32px;margin:40px auto;max-width:700px;font-family:'Monaco','Courier New',monospace;font-size:14px;line-height:1.8;overflow-x:auto}
+.code-block .comment{color:#666}
+.code-block .keyword{color:#c678dd}
+.code-block .string{color:#98c379}
+.code-block .fn{color:#61afef}
+
+/* CTA */
+.cta{padding:80px 0;text-align:center}
+.cta-box{background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(236,72,153,0.1));border:1px solid rgba(99,102,241,0.2);border-radius:24px;padding:60px}
+.cta-box h2{font-size:36px;font-weight:800;margin-bottom:16px}
+.cta-box p{color:#888;font-size:18px;margin-bottom:32px}
+
+/* Footer */
+footer{padding:40px 0;border-top:1px solid rgba(255,255,255,0.06);text-align:center}
+footer p{color:#666;font-size:14px}
+footer .links{display:flex;justify-content:center;gap:24px;margin-top:16px}
+footer .links a{color:#666;font-size:14px;transition:.3s}
+footer .links a:hover{color:#fff}
+
+@media(max-width:768px){
+.hero h1{font-size:36px}
+.grid{grid-template-columns:1fr}
+.pricing-grid{grid-template-columns:1fr 1fr}
+.stats{flex-direction:column;gap:24px}
+.nav-links{display:none}
+}
 </style>
 </head>
 <body>
-<div class="header">
-<h1>⚡ HarzPay</h1>
-<p>Bills, Airtime, Data, Cable TV — Powered by HARZ Cloud</p>
-</div>
+
+<!-- Nav -->
+<nav>
 <div class="container">
+<a href="#" class="logo">⚡ HARZ Cloud</a>
+<div class="nav-links">
+<a href="#features">Features</a>
+<a href="#pricing">Pricing</a>
+<a href="#deploy">Deploy</a>
+<a href="https://harzpay.vercel.app">HarzPay</a>
+<a href="https://harz-cloud-backend.vercel.app/docs" target="_blank">API Docs</a>
+<a href="#signup" class="btn btn-primary">Get Started</a>
+</div>
+</div>
+</nav>
 
-<!-- TAB BAR -->
-<div class="tab-bar">
-<div class="tab active" id="tab-bills" onclick="switchTab('bills')">📱 Bills</div>
-<div class="tab" id="tab-fund" onclick="switchTab('fund')">💰 Fund Wallet</div>
-<div class="tab" id="tab-history" onclick="switchTab('history')">📋 History</div>
+<!-- Hero -->
+<section class="hero">
+<div class="container">
+<div class="badge">🚀 Now with Paystack integration + Hausa AI</div>
+<h1>Deploy in Africa.<br><span>Scale to the world.</span></h1>
+<p>The cloud platform built for African developers. Native Paystack payments, Hausa AI support, and one-click deployments. No credit card required to start.</p>
+<div class="hero-cta">
+<a href="#signup" class="btn btn-primary">Start Free →</a>
+<a href="#deploy" class="btn btn-ghost">View Demo</a>
 </div>
+<div class="stats">
+<div class="stat"><h3>126+</h3><p>API Endpoints</p></div>
+<div class="stat"><h3>49</h3><p>Live Platforms</p></div>
+<div class="stat"><h3>7</h3><p>AI Agents</p></div>
+<div class="stat"><h3>₦0</h3><p>to start</p></div>
+</div>
+</div>
+</section>
 
-<!-- BILLS TAB -->
-<div id="bills-tab">
+<!-- Features -->
+<section class="features" id="features">
+<div class="container">
+<div class="section-title">
+<h2>Built for African builders</h2>
+<p>Everything you need to launch, grow, and scale — in one platform.</p>
+</div>
+<div class="grid">
 <div class="card">
-<h2>What do you want to pay?</h2>
-<div class="cat-grid" id="categories"></div>
+<div class="icon" style="background:rgba(99,102,241,0.15)">💳</div>
+<h3>Paystack Native</h3>
+<p>Accept card payments instantly. No setup fees. Inline checkout, USSD, bank transfer, and USDT — all built-in.</p>
 </div>
-<div id="provider-section" style="display:none">
 <div class="card">
-<h2 id="provider-title">Select Provider</h2>
-<div id="providers"></div>
+<div class="icon" style="background:rgba(236,72,153,0.15)">🤖</div>
+<h3>Hausa AI Agents</h3>
+<p>7 specialized AI agents for health, security, devops, wellness, education, content, and finance. Speak your language.</p>
 </div>
-</div>
-<div id="form-section" style="display:none">
 <div class="card">
-<h2 id="form-title">Payment Details</h2>
-<div id="plans-section" style="display:none">
-<div class="label">Select Plan</div>
-<div id="plans"></div>
+<div class="icon" style="background:rgba(245,158,11,0.15)">⚡</div>
+<h3>One-Click Deploy</h3>
+<p>Push to GitHub, auto-deploy to global CDN. Zero config. Free SSL. Instant rollbacks. Just like Vercel.</p>
 </div>
-<div id="amount-section">
-<div class="label">Amount (₦)</div>
-<input class="input" id="amount" type="number" placeholder="1000">
+<div class="card">
+<div class="icon" style="background:rgba(34,197,94,0.15)">📊</div>
+<h3>Real-Time Dashboard</h3>
+<p>Monitor all your apps, APIs, and agents from one DeployForge dashboard. Live stats, logs, and health checks.</p>
 </div>
-<div id="meter-section" style="display:none">
-<div class="label">Meter Number / Smartcard Number</div>
-<input class="input" id="meter" placeholder="Enter meter number">
+<div class="card">
+<div class="icon" style="background:rgba(6,182,212,0.15)">🔐</div>
+<h3>SSO & Auth</h3>
+<p>Single sign-on across all HARZ apps. JWT tokens, session management, and row-level security out of the box.</p>
 </div>
-<div class="label">Phone Number</div>
-<input class="input" id="phone" placeholder="08012345678">
-<div class="label">Your Name</div>
-<input class="input" id="name" placeholder="Your name">
-<div class="label">Email (for receipt)</div>
-<input class="input" id="email" placeholder="you@email.com">
-<div id="discount-info" style="display:none;margin-top:8px;padding:8px;background:#1a8a5e;border-radius:8px;font-size:13px"></div>
-<button class="btn" onclick="payBill()">Pay Now →</button>
+<div class="card">
+<div class="icon" style="background:rgba(168,85,247,0.15)">🏗️</div>
+<h3>60+ Templates</h3>
+<p>Pre-built apps for fintech, e-commerce, health, media, and more. Fork, customize, and deploy in minutes.</p>
 </div>
 </div>
 </div>
+</section>
 
-<!-- FUND WALLET TAB -->
-<div id="fund-tab" style="display:none">
-<div class="card">
-<h2>Fund Your Wallet</h2>
-<p style="color:#8892a6;font-size:13px;margin-bottom:16px">Choose a payment method to add funds to your HarzPay wallet.</p>
-<div id="payment-options"></div>
+<!-- Deploy Demo -->
+<section class="code-section" id="deploy">
+<div class="container">
+<div class="section-title">
+<h2>Deploy in 60 seconds</h2>
+<p>No DevOps degree required.</p>
 </div>
-<div id="fund-form" style="display:none">
-<div class="card">
-<h2 id="fund-method-title">Enter Amount</h2>
-<div class="label">Amount (₦)</div>
-<input class="input" id="fund-amount" type="number" placeholder="1000">
-<div class="label">Email</div>
-<input class="input" id="fund-email" placeholder="you@email.com">
-<button class="btn btn-green" onclick="processFund()">Continue →</button>
+<div class="code-block">
+<span class="comment"># Install HARZ CLI</span><br>
+<span class="keyword">npm</span> install -g @harz/cli<br><br>
+<span class="comment"># Create a new app</span><br>
+<span class="keyword">harz</span> <span class="fn">create</span> my-app --template fintech<br><br>
+<span class="comment"># Deploy to global CDN</span><br>
+<span class="keyword">harz</span> <span class="fn">deploy</span><br><br>
+<span class="comment">✓ Building... ✓ Deploying... ✓ Live!</span><br>
+<span class="string">→ https://my-app.harz.app</span> (production)<br>
+<span class="string">→ Paystack payments enabled</span><br>
+<span class="string">→ Hausa AI agent ready</span>
 </div>
 </div>
-<div id="fund-result" style="display:none"></div>
-</div>
+</section>
 
-<!-- HISTORY TAB -->
-<div id="history-tab" style="display:none">
-<div class="card">
-<h2>Transaction History</h2>
-<div id="history-list">
-<p style="color:#8892a6;font-size:13px;text-align:center;padding:20px">Loading transactions...</p>
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+<div class="container">
+<div class="section-title">
+<h2>Simple, honest pricing</h2>
+<p>Start free. Upgrade when you grow. No hidden fees.</p>
+</div>
+<div class="pricing-grid">
+<div class="price-card">
+<h3>Free</h3>
+<div class="price">₦0<span>/mo</span></div>
+<p>For trying things out</p>
+<ul>
+<li>1 project</li>
+<li>100 API calls/day</li>
+<li>HARZ Cloud hosting</li>
+<li>Community support</li>
+<li>Basic AI agent</li>
+</ul>
+<a href="#signup" class="btn btn-ghost">Start Free</a>
+</div>
+<div class="price-card popular">
+<h3>Developer</h3>
+<div class="price">₦5K<span>/mo</span></div>
+<p>For indie hackers</p>
+<ul>
+<li>10 projects</li>
+<li>10K API calls/day</li>
+<li>Paystack integration</li>
+<li>All 7 AI agents</li>
+<li>Priority support</li>
+<li>Custom domains</li>
+</ul>
+<a href="#signup" class="btn btn-primary">Choose Developer</a>
+</div>
+<div class="price-card">
+<h3>Business</h3>
+<div class="price">₦25K<span>/mo</span></div>
+<p>For growing teams</p>
+<ul>
+<li>Unlimited projects</li>
+<li>100K API calls/day</li>
+<li>Team collaboration</li>
+<li>Advanced analytics</li>
+<li>SSO & RBAC</li>
+<li>24/7 support</li>
+</ul>
+<a href="#signup" class="btn btn-ghost">Choose Business</a>
+</div>
+<div class="price-card">
+<h3>Enterprise</h3>
+<div class="price>₦Custom</div>
+<p>For large orgs</p>
+<ul>
+<li>Everything in Business</li>
+<li>Unlimited API calls</li>
+<li>On-prem deployment</li>
+<li>Dedicated support</li>
+<li>SLA guarantee</li>
+<li>Custom AI training</li>
+</ul>
+<a href="#signup" class="btn btn-ghost">Contact Sales</a>
 </div>
 </div>
 </div>
+</section>
 
-<!-- RESULT SECTION -->
-<div id="result-section" style="display:none">
-<div class="card" style="text-align:center">
-<div id="result-icon" class="success-icon">✅</div>
-<h2 id="result-title">Payment Successful!</h2>
-<div class="result-box" id="result-details"></div>
-<div id="payment-options-result" style="margin-top:16px"></div>
+<!-- CTA -->
+<section class="cta" id="signup">
+<div class="container">
+<div class="cta-box">
+<h2>Ready to build?</h2>
+<p>Join the African developer revolution. Deploy your first app in 60 seconds.</p>
+<a href="https://harz-cloud-backend.vercel.app/onboarding" class="btn btn-primary" style="padding:16px 40px;font-size:18px">Get Started Free →</a>
 </div>
 </div>
+</section>
 
+<!-- Footer -->
+<footer>
+<div class="container">
+<p>© 2026 HARZ Cloud. Built in Africa, for Africa. 🌍</p>
+<div class="links">
+<a href="https://harz-cloud-backend.vercel.app/docs">API Docs</a>
+<a href="https://harzpay.vercel.app">HarzPay</a>
+<a href="https://deployforge-harz.vercel.app">DeployForge</a>
+<a href="https://harzbuild-ai.vercel.app">HarzBuilder</a>
+<a href="https://github.com/rabiuhamza11">GitHub</a>
 </div>
+</div>
+</footer>
 
 <script>
-const API='https://harz-cloud-backend.vercel.app/api';
-const CATS=[
-{id:'airtime',icon:'📱',name:'Airtime'},
-{id:'data',icon:'📶',name:'Data'},
-{id:'electricity',icon:'⚡',name:'Electricity'},
-{id:'cable_tv',icon:'📺',name:'Cable TV'},
-{id:'internet',icon:'🌐',name:'Internet'},
-{id:'water',icon:'💧',name:'Water'}
-];
-let selectedCat='',selectedProvider=null,providers=[],selectedPlan=null;
-
-// TABS
-function switchTab(tab){
-['bills','fund','history'].forEach(t=>{
-document.getElementById(t+'-tab').style.display=t===tab?'block':'none';
-document.getElementById('tab-'+t).classList.toggle('active',t===tab);
-});
-document.getElementById('result-section').style.display='none';
-if(tab==='fund')loadPaymentOptions();
-if(tab==='history')loadHistory();
-}
-
-// BILLS
-function init(){
-document.getElementById('categories').innerHTML=CATS.map(c=>
-`<div class="cat-item" onclick="selectCat('${c.id}',this)"><div class="icon">${c.icon}</div><div class="name">${c.name}</div></div>`
-).join('');
-}
-
-async function selectCat(cat,el){
-selectedCat=cat;selectedProvider=null;selectedPlan=null;
-document.querySelectorAll('.cat-item').forEach(e=>e.classList.remove('active'));
-el.classList.add('active');
-document.getElementById('provider-section').style.display='block';
-document.getElementById('form-section').style.display='none';
-document.getElementById('result-section').style.display='none';
-document.getElementById('provider-title').textContent='Select '+CATS.find(c=>c.id==cat).name+' Provider';
-try{
-const r=await fetch(`${API}/harzpay/bills/${cat}`);
-const d=await r.json();
-providers=d.providers||[];
-document.getElementById('providers').innerHTML=providers.map(p=>
-`<button class="provider-btn" onclick="selectProvider('${p.id}',this)">${p.provider_name}${p.discount_percent>0?`<span class="discount">-${p.discount_percent}%</span>`:''}</button>`
-).join('');
-}catch(e){document.getElementById('providers').innerHTML='<p style="color:#8892a6">No providers found.</p>'}
-}
-
-function selectProvider(pid,el){
-selectedProvider=providers.find(p=>p.id==pid);
-document.querySelectorAll('.provider-btn').forEach(e=>e.classList.remove('selected'));
-el.classList.add('selected');
-document.getElementById('form-section').style.display='block';
-document.getElementById('form-title').textContent=selectedProvider.provider_name;
-const hasPlans=selectedProvider.plans&&selectedProvider.plans.length>0;
-document.getElementById('plans-section').style.display=hasPlans?'block':'none';
-document.getElementById('amount-section').style.display=hasPlans?'none':'block';
-document.getElementById('meter-section').style.display=(selectedCat=='electricity'||selectedCat=='cable_tv')?'block':'none';
-if(hasPlans){
-document.getElementById('plans').innerHTML=selectedProvider.plans.map((p,i)=>
-`<button class="plan-btn" onclick="selectPlan(${i},this)">${p}</button>`
-).join('');
-}
-if(selectedProvider.discount_percent>0){
-document.getElementById('discount-info').style.display='block';
-document.getElementById('discount-info').textContent='🎉 You save '+selectedProvider.discount_percent+'% on this provider!';
-}else{document.getElementById('discount-info').style.display='none'}
-}
-
-function selectPlan(i,el){
-selectedPlan=selectedProvider.plans[i];
-document.querySelectorAll('.plan-btn').forEach(e=>e.classList.remove('selected'));
-el.classList.add('selected');
-}
-
-async function payBill(){
-const amount=selectedPlan?Number(selectedPlan.split(':')[0]):Number(document.getElementById('amount').value);
-if(!amount){alert('Please enter amount');return}
-const phone=document.getElementById('phone').value;
-if(!phone){alert('Enter phone number');return}
-const name=document.getElementById('name').value;
-const email=document.getElementById('email').value;
-const meter=document.getElementById('meter').value;
-
-try{
-const r=await fetch(`${API}/harzpay/bills/pay`,{
-method:'POST',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({bill_type:selectedCat,provider_id:selectedProvider.id,amount,phone,name,email,meter})
-});
-const d=await r.json();
-
-if(d.success){
-document.getElementById('form-section').style.display='none';
-document.getElementById('provider-section').style.display='none';
-document.getElementById('result-section').style.display='block';
-
-const t=d.transaction;
-const discountText=t.discount>0?`<br>Discount: ₦${t.discount}<br>You Pay: ₦${t.final_amount}`:'';
-
-document.getElementById('result-details').innerHTML=
-`Reference: <span class="ref">${t.reference}</span><br>`+
-`Provider: ${t.provider}<br>`+
-`Amount: ₦${amount.toLocaleString()}`+discountText+`<br>`+
-`Phone: ${phone}${meter?'<br>Meter: '+meter:''}<br>`+
-`Status: <b>${t.status}</b>`;
-
-// Show payment options
-const opts=d.payment_options;
-let payHTML='<div class="result-box"><strong>Pay via:</strong><br>';
-if(opts.paystack){
-payHTML+=`<button class="btn btn-green" style="margin-top:8px" onclick="window.location.href='${opts.paystack}'">💳 Pay with Card (Paystack)</button>`;
-}
-if(opts.bank){
-payHTML+=`<div style="margin-top:8px">🏦 Bank Transfer<br>${opts.bank.bank_name}<br>${opts.bank.account_name}<br><strong>${opts.bank.account_number}</strong></div>`;
-}
-if(opts.usdt){
-payHTML+=`<div style="margin-top:8px">💰 USDT (${opts.usdt.network})<br><strong>${opts.usdt.wallet}</strong></div>`;
-}
-if(opts.ussd){
-payHTML+=`<div style="margin-top:8px">📱 USSD<br><code>${opts.ussd}</code></div>`;
-}
-if(opts.whatsapp){
-payHTML+=`<div style="margin-top:8px">💬 WhatsApp: ${opts.whatsapp}</div>`;
-}
-payHTML+='</div>';
-document.getElementById('payment-options-result').innerHTML=payHTML;
-
-// If Paystack redirect available
-if(opts.paystack){
-document.getElementById('result-title').textContent='Complete Payment';
-document.getElementById('result-icon').className='pending-icon';
-document.getElementById('result-icon').textContent='⏳';
-}else{
-document.getElementById('result-title').textContent='Order Created — Pay to Confirm';
-document.getElementById('result-icon').className='pending-icon';
-document.getElementById('result-icon').textContent='⏳';
-}
-}else{
-alert('Payment failed: '+(d.error||'Unknown error'));
-}
-}catch(e){alert('Error: '+e.message)}
-}
-
-// FUND WALLET
-async function loadPaymentOptions(){
-try{
-const r=await fetch(`${API}/harzpay/options`);
-const d=await r.json();
-let html='';
-if(d.bank_transfer){
-html+=`<div class="pay-option" onclick="selectFundMethod('bank',this)">
-<div class="icon">🏦</div><div class="info"><div class="name">Bank Transfer</div>
-<div class="detail">${d.bank_transfer.bank_name} — ${d.bank_transfer.account_number}</div></div></div>`;
-}
-if(d.usdt){
-html+=`<div class="pay-option" onclick="selectFundMethod('usdt',this)">
-<div class="icon">💰</div><div class="info"><div class="name">USDT (${d.usdt.network})</div>
-<div class="detail">${d.usdt.wallet.substring(0,12)}...${d.usdt.wallet.substring(-6)}</div></div></div>`;
-}
-if(d.ussd){
-html+=`<div class="pay-option" onclick="selectFundMethod('ussd',this)">
-<div class="icon">📱</div><div class="info"><div class="name">USSD</div>
-<div class="detail">${d.ussd}</div></div></div>`;
-}
-html+=`<div class="pay-option" onclick="selectFundMethod('paystack',this)">
-<div class="icon">💳</div><div class="info"><div class="name">Card (Paystack)</div>
-<div class="detail">Visa, Verve, Mastercard</div></div></div>`;
-html+=`<div class="pay-option" onclick="selectFundMethod('whatsapp',this)">
-<div class="icon">💬</div><div class="info"><div class="name">WhatsApp</div>
-<div class="detail">${d.whatsapp}</div></div></div>`;
-document.getElementById('payment-options').innerHTML=html;
-}catch(e){
-document.getElementById('payment-options').innerHTML='<p style="color:#8892a6">Could not load payment options.</p>';
-}
-}
-
-function selectFundMethod(method,el){
-document.querySelectorAll('.pay-option').forEach(e=>e.classList.remove('selected'));
-el.classList.add('selected');
-document.getElementById('fund-form').style.display='block';
-document.getElementById('fund-result').style.display='none';
-
-const titles={bank:'Bank Transfer',usdt:'USDT Payment',ussd:'USSD Code',paystack:'Card Payment',whatsapp:'WhatsApp Payment'};
-document.getElementById('fund-method-title').textContent=titles[method]||'Enter Amount';
-document.getElementById('fund-form').dataset.method=method;
-}
-
-async function processFund(){
-const amount=Number(document.getElementById('fund-amount').value);
-const email=document.getElementById('fund-email').value;
-if(!amount){alert('Enter amount');return}
-const method=document.getElementById('fund-form').dataset.method;
-
-try{
-// Generate reference
-const r=await fetch(`${API}/harzpay/reference`,{
-method:'POST',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({amount})
-});
-const d=await r.json();
-
-let resultHTML=`<div class="card"><div class="pending-icon">⏳</div><h2>Payment Reference Created</h2>`;
-resultHTML+=`<div class="result-box">Reference: <span class="ref">${d.reference}</span><br>Amount: ₦${amount.toLocaleString()}`;
-
-if(method==='bank'||method==='ussd'){
-resultHTML+=`<br><br>🏦 ${d.bank.bank_name}<br>${d.bank.account_name}<br><strong>${d.bank.account_number}</strong>`;
-if(method==='ussd')resultHTML+=`<br><br>📱 Dial: <code>${d.ussd}</code>`;
-}
-if(method==='usdt'){
-resultHTML+=`<br><br>💰 Send USDT (${d.usdt.network})<br><strong>${d.usdt.wallet}</strong>`;
-}
-if(method==='paystack'){
-resultHTML+=`<br><br>💳 Redirecting to Paystack...`;
-}
-if(method==='whatsapp'){
-resultHTML+=`<br><br>💬 Message us on WhatsApp: ${d.whatsapp}`;
-}
-resultHTML+=`</div>`;
-
-// If Paystack, try to initialize
-if(method==='paystack'&&email){
-try{
-const pr=await fetch(`${API}/payments/initialize`,{
-method:'POST',
-headers:{'Content-Type':'application/json','x-auth-token':localStorage.getItem('harzpay_token')||''},
-body:JSON.stringify({email,amount,reference:d.reference,callback_url:window.location.origin})
-});
-const pd=await pr.json();
-if(pd.data&&pd.data.authorization_url){
-window.location.href=pd.data.authorization_url;
-return;
-}
-}catch(e){}
-}
-
-resultHTML+=`<button class="btn btn-green" style="margin-top:12px" onclick="copyRef('${d.reference}')">Copy Reference</button></div>`;
-document.getElementById('fund-result').innerHTML=resultHTML;
-document.getElementById('fund-result').style.display='block';
-document.getElementById('fund-form').style.display='none';
-}catch(e){alert('Error: '+e.message)}
-}
-
-function copyRef(ref){
-navigator.clipboard.writeText(ref).then(()=>alert('Reference copied!'));
-}
-
-// HISTORY
-async function loadHistory(){
-try{
-const r=await fetch(`${API}/transactions?platform=HarzPay&limit=20`);
-const data=await r.json();
-const txns=data.transactions||data||[];
-if(!Array.isArray(txns)||txns.length===0){
-document.getElementById('history-list').innerHTML='<p style="color:#8892a6;font-size:13px;text-align:center;padding:20px">No transactions yet.</p>';
-return;
-}
-document.getElementById('history-list').innerHTML=txns.map(t=>
-`<div style="padding:12px;border-bottom:1px solid #2a2f3e">
-<div style="display:flex;justify-content:space-between">
-<span style="font-size:14px">${t.description||t.type||'Payment'}</span>
-<span style="font-size:14px;font-weight:bold;color:${t.status==='completed'?'#00A859':'#FF9800'}">₦${Number(t.amount||0).toLocaleString()}</span>
-</div>
-<div style="font-size:12px;color:#8892a6;margin-top:4px">
-${t.reference||''} · ${t.status||''}
-</div></div>`
-).join('');
-}catch(e){
-document.getElementById('history-list').innerHTML='<p style="color:#8892a6;font-size:13px;text-align:center;padding:20px">Could not load history.</p>';
-}
-}
-
-init();
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+a.addEventListener('click',e=>{
+const id=a.getAttribute('href');
+if(id.length>1){e.preventDefault();document.querySelector(id)?.scrollIntoView({behavior:'smooth'})}
+})
+})
 </script>
 </body>
 </html>
